@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { QrCode, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,23 +12,40 @@ interface QRCodeDisplayProps {
 
 const QRCodeDisplay = ({ appUrl, onDownload }: QRCodeDisplayProps) => {
   const { toast } = useToast();
+  
   // Create a QR code URL using a reliable QR code generation API
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(appUrl || 'https://appify.example.com/app')}`;
   
-  const handleDownloadQRCode = () => {
-    // Create an anchor element to download the QR code image
+  const handleDownloadQRCode = useCallback(() => {
+    // Create a direct download link for the QR code image
     const link = document.createElement('a');
-    link.href = qrCodeUrl;
-    link.download = 'app-qrcode.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
     
-    toast({
-      title: "QR Code Downloaded",
-      description: "The QR code has been downloaded successfully.",
-    });
-  };
+    // Fetch the QR code image first to ensure it's properly downloaded
+    fetch(qrCodeUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = 'app-qrcode.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        toast({
+          title: "QR Code Downloaded",
+          description: "The QR code has been downloaded successfully.",
+        });
+      })
+      .catch(error => {
+        console.error('Error downloading QR code:', error);
+        toast({
+          title: "Download Failed",
+          description: "There was an error downloading the QR code.",
+          variant: "destructive"
+        });
+      });
+  }, [qrCodeUrl, toast]);
   
   return (
     <div className="flex flex-col items-center space-y-6">

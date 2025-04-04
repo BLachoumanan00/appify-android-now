@@ -103,7 +103,8 @@ const ConversionForm = () => {
           clearInterval(interval);
           setIsLoading(false);
           setIsGenerated(true);
-          const demoAppUrl = `https://appify-demo.com/app/${Date.now()}`;
+          const appId = Date.now().toString();
+          const demoAppUrl = `${window.location.origin}/app/${appId}`;
           setGeneratedAppUrl(demoAppUrl);
           toast({
             title: "Success!",
