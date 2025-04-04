@@ -7,16 +7,30 @@ interface AppPreviewProps {
   appName: string;
   appColor: string;
   icon?: string | null;
+  screenSize?: string;
 }
 
-const AppPreview = ({ url, appName, appColor, icon }: AppPreviewProps) => {
+const AppPreview = ({ url, appName, appColor, icon, screenSize = "medium" }: AppPreviewProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Calculate width and height based on screenSize
+  const getFrameSize = () => {
+    switch(screenSize) {
+      case "small":
+        return "w-[240px] h-[500px]";
+      case "large":
+        return "w-[320px] h-[650px]";
+      case "medium":
+      default:
+        return "w-[280px] h-[580px]";
+    }
+  };
 
   return (
     <div className="flex flex-col items-center">
       <h3 className="text-lg font-medium mb-4">App Preview</h3>
       <div 
-        className="relative w-[280px] h-[580px] rounded-[40px] overflow-hidden shadow-2xl border-8 transition-colors duration-300"
+        className={`relative ${getFrameSize()} rounded-[40px] overflow-hidden shadow-2xl border-8 transition-colors duration-300`}
         style={{ borderColor: "black" }}
       >
         {/* Status bar */}

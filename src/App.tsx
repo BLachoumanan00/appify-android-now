@@ -7,13 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-// Extend AppPreview's props in components to accept screenSize
-declare module "@/components/AppPreview" {
-  interface AppPreviewProps {
-    screenSize?: string;
-  }
-}
-
 const queryClient = new QueryClient();
 
 const App = () => (
