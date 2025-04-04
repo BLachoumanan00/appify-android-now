@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import Hero from "@/components/Hero";
 import ConversionForm from "@/components/ConversionForm";
 import FeatureCard from "@/components/FeatureCard";
+import { useEffect } from "react";
 
 const Index = () => {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}

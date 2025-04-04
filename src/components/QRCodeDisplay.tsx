@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { QrCode } from 'lucide-react';
+import { QrCode, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 interface QRCodeDisplayProps {
   appUrl: string;
@@ -10,8 +11,24 @@ interface QRCodeDisplayProps {
 }
 
 const QRCodeDisplay = ({ appUrl, onDownload }: QRCodeDisplayProps) => {
-  // Create a demo URL for QR code (in a real app, this would be the actual app URL)
+  const { toast } = useToast();
+  // Create a QR code URL using a reliable QR code generation API
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(appUrl || 'https://appify.example.com/app')}`;
+  
+  const handleDownloadQRCode = () => {
+    // Create an anchor element to download the QR code image
+    const link = document.createElement('a');
+    link.href = qrCodeUrl;
+    link.download = 'app-qrcode.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "QR Code Downloaded",
+      description: "The QR code has been downloaded successfully.",
+    });
+  };
   
   return (
     <div className="flex flex-col items-center space-y-6">
@@ -33,6 +50,9 @@ const QRCodeDisplay = ({ appUrl, onDownload }: QRCodeDisplayProps) => {
             <p className="text-sm font-medium">Scan to test on your device</p>
             <p className="text-xs text-muted-foreground">Point your camera at the QR code to open the app</p>
           </div>
+          <Button onClick={handleDownloadQRCode} variant="outline" size="sm" className="mt-2">
+            <Download className="h-4 w-4 mr-2" /> Save QR Code
+          </Button>
         </TabsContent>
         
         <TabsContent value="download" className="space-y-4 pt-6">

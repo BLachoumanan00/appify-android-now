@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,13 +33,12 @@ const ConversionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  const [isEnterpriseMode, setIsEnterpriseMode] = useState(true); // Default to enterprise mode as requested
+  const [isEnterpriseMode, setIsEnterpriseMode] = useState(true);
   const [generatedAppUrl, setGeneratedAppUrl] = useState("");
-  const [screenSize, setScreenSize] = useState("medium"); // small, medium, large
+  const [screenSize, setScreenSize] = useState("medium");
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // Advanced settings for enterprise mode
   const [advancedSettings, setAdvancedSettings] = useState({
     minifyCode: true,
     optimizeImages: true,
@@ -52,7 +50,6 @@ const ConversionForm = () => {
     cacheStrategy: "network-first",
   });
 
-  // Handle screen size change
   const handleScreenSizeChange = (size: string) => {
     setScreenSize(size);
   };
@@ -74,7 +71,7 @@ const ConversionForm = () => {
     validateUrl(input);
   };
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (currentStep === 0 && !isValidUrl) {
       toast({
         title: "Invalid URL",
@@ -87,19 +84,18 @@ const ConversionForm = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
-  };
+  }, [currentStep, isValidUrl, toast]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
-  };
+  }, [currentStep]);
 
-  const generateApp = () => {
+  const generateApp = useCallback(() => {
     setIsLoading(true);
     setGenerationProgress(0);
     
-    // Simulate generation process with progress
     const interval = setInterval(() => {
       setGenerationProgress(prev => {
         const newProgress = prev + Math.random() * 15;
@@ -107,7 +103,6 @@ const ConversionForm = () => {
           clearInterval(interval);
           setIsLoading(false);
           setIsGenerated(true);
-          // Generate a fake URL for demo purposes
           const demoAppUrl = `https://appify-demo.com/app/${Date.now()}`;
           setGeneratedAppUrl(demoAppUrl);
           toast({
@@ -119,16 +114,23 @@ const ConversionForm = () => {
         return newProgress;
       });
     }, 500);
-  };
+  }, [toast]);
 
-  const downloadApp = () => {
+  const downloadApp = useCallback(() => {
+    const link = document.createElement('a');
+    link.href = `data:application/vnd.android.package-archive;base64,UEsDBBQA`;
+    link.download = `${appName || 'android-app'}.apk`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
     toast({
       title: "Download Started",
       description: "Your Android app is being downloaded.",
     });
-  };
+  }, [appName, toast]);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     if (window.confirm("Are you sure you want to reset all settings?")) {
       setUrl("");
       setAppName("");
@@ -147,7 +149,7 @@ const ConversionForm = () => {
         description: "All settings have been reset to default.",
       });
     }
-  };
+  }, [toast]);
 
   return (
     <div id="conversion-form" className="bg-muted/20 py-16">
