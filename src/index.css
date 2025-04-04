@@ -133,6 +133,82 @@
   animation: float 6s ease-in-out infinite;
 }
 
+/* iOS 18 inspired styles */
+.ios18-blur {
+  backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dark .ios18-blur {
+  background-color: rgba(28, 28, 30, 0.6);
+  border: 1px solid rgba(44, 44, 46, 0.5);
+}
+
+.ios18-card {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.dark .ios18-card {
+  background: rgba(30, 30, 32, 0.7);
+  border: 1px solid rgba(60, 60, 67, 0.3);
+}
+
+.ios18-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+}
+
+.ios18-button {
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.ios18-button:hover {
+  transform: scale(1.02);
+}
+
+.ios18-input {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.dark .ios18-input {
+  background: rgba(44, 44, 46, 0.8);
+  border: 1px solid rgba(82, 82, 93, 0.2);
+}
+
+.ios18-input:focus {
+  box-shadow: 0 0 0 3px rgba(var(--primary), 0.25);
+  border-color: hsl(var(--primary));
+}
+
+/* Responsive improvements */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.enterprise-badge {
+  background: linear-gradient(135deg, #2C5EF1 0%, #9747FF 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
 @keyframes float {
   0% {
     transform: translateY(0px);
@@ -151,5 +227,22 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+/* Media queries for better responsive design */
+@media (max-width: 640px) {
+  .ios18-card {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+    line-height: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
   }
 }
